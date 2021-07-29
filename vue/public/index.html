@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Security-Policy" content="<%= VUE_APP_REQUESTS_HEADER %>">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="api-url" content="<%= VUE_APP_API_URL %>">
+    <meta name="forum-service" content="<%= VUE_APP_FORUM_SERVICE %>">
+    <meta name="host" content="<%= VUE_APP_HOST %>">
+    <meta name="websocket" content="<%= VUE_APP_WEBSOCKET %>">
+    <meta name="chat" content="<%= VUE_APP_CHAT %>">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>Vue2 Starter</title>
+    <meta property="webapp:version" content="<%= VUE_APP_VERSION %>">
+    <!-- <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v3.3&appId=240532037585332&autoLogAppEvents=1"></script> -->
+        <script async defer crossorigin="anonymous"
+            src="https://connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v3.3&appId=362353478733244&autoLogAppEvents=1"></script>
+    <script src="https://apis.google.com/js/api:client.js"></script>
+</head>
+
+<body>
+    <noscript>
+        <strong>We're sorry but Vue2 Starter doesn't work properly without JavaScript enabled. Please enable it to
+            continue.</strong>
+    </noscript>
+    <div id="firstLoading" class="firstLoading">
+        <div class="loadingCont">
+            <span>Loading...</span>
+            <span id="progressCont" class="progressCont">0%</span>
+            <div class="progressDiv">
+                <div id="progressBar" class="progressBar"></div>
+            </div>
+        </div>
+    </div>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <script>
+        var progressDiv = document.getElementById('progressCont');
+        var loading = document.getElementById("firstLoading")
+        var prg = 0;
+        var timer = 0
+        var loadingSuccess = setInterval(() => {
+            var success = window.top.success
+            if (success) {
+                clearInterval(loadingSuccess)
+                progress(100, 10, () => {
+                    fadeOut(loading)
+                })
+            }
+        }, 50)
+        progress(80, 100, '99')
+        // window.onload = () => {
+        //     progress(100, 10, () => {
+        //         fadeOut(loading)
+        //     })
+        // };
+        function progress(dist, delay, callback) {
+            var bar = document.getElementById('progressBar')
+            window.clearInterval(timer)
+            timer = window.setInterval(() => {
+                if (prg >= dist) {
+                    window.clearInterval(timer);
+                    prg = dist;
+                    if (callback != undefined) {
+                        if (callback == '99') {
+                            progress(99, 500)
+                        } else {
+                            callback()
+                            setTimeout(()=>{
+                            loading.style.zIndex = "-1"
+                            },250)
+                        }
+                    }
+                } else {
+                    prg++
+                }
+                bar.style.width = prg + "%"
+                progressDiv.innerHTML = prg + '%'
+            }, delay)
+        };
+        function fadeOut(element) {
+            var speed = 30;
+            var num = 10;
+            var st = setInterval(function () {
+                num--;
+                element.style.opacity = num / 10;
+                if (num <= 0) {
+                    clearInterval(st);
+                }
+            }, speed);
+        }
+    </script>
+    <style>
+        html{
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        .firstLoading {
+            position: absolute;
+            top: 0;
+            z-index: 9999;
+            opacity: 1;
+            background-color: #222629;
+            width: 100vw;
+            height: 100vh;
+            overflow-y: hidden;
+        }
+
+        .loadingCont {
+            margin-top: 50vh;
+            text-align: center;
+            color: #dedede;
+            font-weight: 700;
+        }
+
+        .progressDiv {
+            text-align: center;
+            margin-inline: auto;
+            background-color: #222629;
+            width: 70%;
+        }
+
+        .progressCont {
+            background-color: #222629;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .progressBar {
+            width: 1%;
+            height: 30px;
+            background-color: #86C231;
+            border-radius: 0.9rem;
+            /* transition: all 0.3s ease; */
+        }
+    </style>
+</body>
+
+</html>

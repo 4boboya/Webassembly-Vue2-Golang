@@ -1,0 +1,11 @@
+VUE_APP_TITLE=
+VUE_APP_API_URL=https://www.zbdigital.net/apiservice/api
+VUE_APP_FORUM_SERVICE=https://www.zbdigital.net/forumservice/
+VUE_APP_HOST=https://www.zbdigital.net
+VUE_APP_WEBSOCKET=https://ls.zbdigital.net/pricecenter/pricecenterhub
+VUE_APP_CHAT=https://ls.zbdigital.net/gamelive/gamelivehub
+VUE_APP_REQUESTS_HEADER=upgrade-insecure-requests
+BASE_URL=/
+VUE_APP_PROXY_PREFIX=
+VUE_APP_PROXY_TARGET=
+API=

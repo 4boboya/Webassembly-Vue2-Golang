@@ -1,0 +1,24 @@
+// plugins
+
+//global
+
+// common
+@import "./application/common";
+
+//Login
+@import "./application/login/login";
+
+//Member
+@import "./application/member/member";
+
+//live
+@import "./application/live/live";
+
+//chat
+@import "./application/chat/chat";
+
+// global package
+@import 'bootstrap/dist/css/bootstrap';
+@import 'bootstrap-vue/dist/bootstrap-vue';
+@import 'sweetalert2/dist/sweetalert2.min';
+@import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar';
