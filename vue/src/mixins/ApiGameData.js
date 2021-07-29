@@ -87,14 +87,23 @@ const ApiGameData = {
                     // proccess odds
                     siteDataList.odds.forEach((odds) => {
                         if (index == -1) return;
+                        // console.log(gameData.site)
                         gameData.site[index].siteGameID = siteDataList.gameID;
                         odds.prices.forEach((prices) => {
                             if (odds.playMode == spreadTypeHA) {
-                                gameData = this.proccessHA(index, prices, gameData);
-                                console.log(prices)
-                                this.$go.ProccessHA(index, prices, gameData)
+                                gameData = this.$go.ProccessHA(index, prices, gameData)
+                                // gameData = this.proccessHA(index, prices, gameData);
+                                // console.log("----gameData-----")
+                                // console.log(gameData)
+                                // console.log(a)
+                                // console.log("-------go--------")
                             } else if (odds.playMode == spreadTypeOU) {
-                                gameData = this.proccessOU(index, prices, gameData);
+                                gameData = this.$go.ProccessOU(index, prices, gameData)
+                                // gameData = this.proccessOU(index, prices, gameData);
+                                // console.log("----gameData-----")
+                                // console.log(gameData)
+                                // console.log(a)
+                                // console.log("-------go--------")
                             }
                         });
                     });

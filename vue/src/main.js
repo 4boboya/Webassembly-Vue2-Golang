@@ -52,6 +52,7 @@ WebAssembly.instantiateStreaming(fetch('main.wasm'), go.importObject).then((res)
     go.run(res.instance)
     Vue.prototype.$go = {
         ProccessHA,
+        ProccessOU,
     }
 })
 
