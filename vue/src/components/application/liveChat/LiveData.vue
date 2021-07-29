@@ -182,6 +182,7 @@ export default {
     this.deSubscribeToLiveServer();
   },
   methods: {
+    ...mapMutations("Render", ["UpdateLoading"]),
     async getGameData() {
       await this.LanguageMapping("Live");
       const requestData = { gameType: this.gameType, gameID: this.gameID };
