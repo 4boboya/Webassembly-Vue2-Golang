@@ -52,8 +52,8 @@ const ApiGameData = {
                 gameData.mainGameID = gameID;
                 gameData.score1 = score1;
                 gameData.score2 = score2;
-                gameData.team1 =this.undefinedCheck(mapping,team1,lang) ? team1 : mapping[team1][lang];
-                gameData.team2 = this.undefinedCheck(mapping,team2,lang) ? team2 : mapping[team2][lang];
+                gameData.team1 = this.undefinedCheck(mapping, team1, lang) ? team1 : mapping[team1][lang];
+                gameData.team2 = this.undefinedCheck(mapping, team2, lang) ? team2 : mapping[team2][lang];
                 gameData.liveUrl = liveUrl;
                 return gameData;
             };
@@ -64,7 +64,7 @@ const ApiGameData = {
                 let gameData = InitialGameDataVaribles(gameDataList);
                 let { league, siteGameDtos } = gameDataList;
                 league =
-                this.undefinedCheck(mapping,league,lang) ? league : mapping[league][lang];
+                    this.undefinedCheck(mapping, league, lang) ? league : mapping[league][lang];
                 let leagueIndex = leagueList.indexOf(league);
                 if (leagueIndex == -1) {
                     //此gamedata的聯盟是否存在
@@ -91,19 +91,13 @@ const ApiGameData = {
                         gameData.site[index].siteGameID = siteDataList.gameID;
                         odds.prices.forEach((prices) => {
                             if (odds.playMode == spreadTypeHA) {
-                                gameData = this.$go.ProccessHA(index, prices, gameData)
+                                var priceString = JSON.stringify(prices)
+                                var gameDataString = JSON.stringify(gameData)
+                                gameData = this.$go.ProccessHA(index, prices, gameData, priceString, gameDataString)
                                 // gameData = this.proccessHA(index, prices, gameData);
-                                // console.log("----gameData-----")
-                                // console.log(gameData)
-                                // console.log(a)
-                                // console.log("-------go--------")
                             } else if (odds.playMode == spreadTypeOU) {
                                 gameData = this.$go.ProccessOU(index, prices, gameData)
                                 // gameData = this.proccessOU(index, prices, gameData);
-                                // console.log("----gameData-----")
-                                // console.log(gameData)
-                                // console.log(a)
-                                // console.log("-------go--------")
                             }
                         });
                     });
@@ -120,95 +114,95 @@ const ApiGameData = {
             this.updateLiveGameData(LiveGameData);
             this.updateSiteGameIDMapping(LiveSiteGameIDMapping);
         },
-        proccessHA(index, prices, gameData) {
-            let oddsIndex;
-            if (prices.spread != "1X2") {
-                //撇出 1X2
-                if (prices.main) {
-                    //找出 main 為 true的
-                    if (prices.spread.indexOf("-") != 0) {
-                        //如果為正，就是主隊讓分，就存在0
-                        oddsIndex = 0;
-                        if (gameData.site[index].odds[0].spread != "-") {
-                            // 如果0已經有值(OU)，就把OU丟到1，HA存0
-                            gameData.site[index].odds[2].spread =
-                                gameData.site[index].odds[0].spread;
-                            gameData.site[index].odds[2].oddType =
-                                gameData.site[index].odds[0].oddType;
-                        }
-                    } else {
-                        prices.spread = prices.spread.substring(1);
-                        oddsIndex = 2;
-                    }
-                    gameData.site[index].odds[oddsIndex].oddType = "HA";
-                }
-            } else {
-                // 1X2
-                oddsIndex = 1;
-                gameData.site[index].odds[oddsIndex].oddType = "1X2";
-            }
-            // 保存賠率
-            if (oddsIndex != undefined) {
-                prices.odds.forEach((odd) => {
-                    gameData = this.saveOdds(odd, gameData, index, oddsIndex);
-                });
-                gameData.site[index].odds[oddsIndex].spread = prices.spread;
-            }
-            return gameData;
-        },
-        proccessOU(index, prices, gameData) {
-            //找出OU
-            let oddsIndex = 2;
-            if (prices.main) {
-                if (gameData.site[index].odds[0].spread == "-") {
-                    // 如果0沒值(HA)，就存到0
-                    oddsIndex = 0;
-                }
-                prices.odds.forEach((odd) => {
-                    // 存入賠率
-                    gameData = this.saveOdds(odd, gameData, index, oddsIndex);
-                });
-                gameData.site[index].odds[oddsIndex].spread = `o${prices.spread}`;
-                gameData.site[index].odds[oddsIndex].oddType = "OU";
-            }
-            return gameData;
-        },
-        saveOdds(odd, gameData, index, oddsIndex) {
-            let oddData = "-";
-            if (odd.odd != -1) {
-                oddData = odd.odd;
-            }
-            if (odd.oddType == "O" || odd.oddType == "H") {
-                gameData.site[index].odds[oddsIndex].odd1 = oddData;
-            } else if (odd.oddType == "U" || odd.oddType == "A") {
-                gameData.site[index].odds[oddsIndex].odd2 = oddData;
-            }
-            return gameData;
-        },
-        async LanguageMapping(form,date = null) {
+        // proccessHA(index, prices, gameData) {
+        //     let oddsIndex;
+        //     if (prices.spread != "1X2") {
+        //         //撇出 1X2
+        //         if (prices.main) {
+        //             //找出 main 為 true的
+        //             if (prices.spread.indexOf("-") != 0) {
+        //                 //如果為正，就是主隊讓分，就存在0
+        //                 oddsIndex = 0;
+        //                 if (gameData.site[index].odds[0].spread != "-") {
+        //                     // 如果0已經有值(OU)，就把OU丟到1，HA存0
+        //                     gameData.site[index].odds[2].spread =
+        //                         gameData.site[index].odds[0].spread;
+        //                     gameData.site[index].odds[2].oddType =
+        //                         gameData.site[index].odds[0].oddType;
+        //                 }
+        //             } else {
+        //                 prices.spread = prices.spread.substring(1);
+        //                 oddsIndex = 2;
+        //             }
+        //             gameData.site[index].odds[oddsIndex].oddType = "HA";
+        //         }
+        //     } else {
+        //         // 1X2
+        //         oddsIndex = 1;
+        //         gameData.site[index].odds[oddsIndex].oddType = "1X2";
+        //     }
+        //     // 保存賠率
+        //     if (oddsIndex != undefined) {
+        //         prices.odds.forEach((odd) => {
+        //             gameData = this.saveOdds(odd, gameData, index, oddsIndex);
+        //         });
+        //         gameData.site[index].odds[oddsIndex].spread = prices.spread;
+        //     }
+        //     return gameData;
+        // },
+        // proccessOU(index, prices, gameData) {
+        //     //找出OU
+        //     let oddsIndex = 2;
+        //     if (prices.main) {
+        //         if (gameData.site[index].odds[0].spread == "-") {
+        //             // 如果0沒值(HA)，就存到0
+        //             oddsIndex = 0;
+        //         }
+        //         prices.odds.forEach((odd) => {
+        //             // 存入賠率
+        //             gameData = this.saveOdds(odd, gameData, index, oddsIndex);
+        //         });
+        //         gameData.site[index].odds[oddsIndex].spread = `o${prices.spread}`;
+        //         gameData.site[index].odds[oddsIndex].oddType = "OU";
+        //     }
+        //     return gameData;
+        // },
+        // saveOdds(odd, gameData, index, oddsIndex) {
+        //     let oddData = "-";
+        //     if (odd.odd != -1) {
+        //         oddData = odd.odd;
+        //     }
+        //     if (odd.oddType == "O" || odd.oddType == "H") {
+        //         gameData.site[index].odds[oddsIndex].odd1 = oddData;
+        //     } else if (odd.oddType == "U" || odd.oddType == "A") {
+        //         gameData.site[index].odds[oddsIndex].odd2 = oddData;
+        //     }
+        //     return gameData;
+        // },
+        async LanguageMapping(form, date = null) {
             if (date == null) date = DateTime.diff_f(0).replace(/-/gi, "")
             let localMapping = localStorage.getItem(`lang${form}Mapping`)
-            if (!Format.NotNull(localMapping) || (localMapping.date != date || localMapping.gameType != store.state.Render.GameType)){
-                if (form == "Hot"){
-                    this.gameTypeArr.forEach(async (type)=>{
-                        await this.GetLanguageMapping('Live',date,type)
+            if (!Format.NotNull(localMapping) || (localMapping.date != date || localMapping.gameType != store.state.Render.GameType)) {
+                if (form == "Hot") {
+                    this.gameTypeArr.forEach(async (type) => {
+                        await this.GetLanguageMapping('Live', date, type)
                     })
-                }else{
-                    await this.GetLanguageMapping(form,date)
+                } else {
+                    await this.GetLanguageMapping(form, date)
                 }
             }
         },
-        async GetLanguageMapping(form,date,gameType = store.state.Render.GameType) {
+        async GetLanguageMapping(form, date, gameType = store.state.Render.GameType) {
             const requestData = { gameType: gameType, date: date }
             const data = await GameApi.LanguageMapping(requestData);
             const mapping = await data != undefined && data.mapping != null ? data.mapping : {}
-            localStorage.setItem(`lang${form}Mapping${gameType}`, JSON.stringify({ date: date, gameType:gameType ,mapping: mapping }))
+            localStorage.setItem(`lang${form}Mapping${gameType}`, JSON.stringify({ date: date, gameType: gameType, mapping: mapping }))
         },
-        undefinedCheck(mapping,name,lang){
-          if (!this.$format.NotNull(mapping) || mapping.mapping[name] == undefined || mapping.mapping[name][lang] == undefined){
-            return true
-          }
-          return false
+        undefinedCheck(mapping, name, lang) {
+            if (!this.$format.NotNull(mapping) || mapping.mapping[name] == undefined || mapping.mapping[name][lang] == undefined) {
+                return true
+            }
+            return false
         }
     },
 };
