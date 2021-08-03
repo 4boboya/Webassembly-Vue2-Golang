@@ -87,16 +87,22 @@ const ApiGameData = {
                     // proccess odds
                     siteDataList.odds.forEach((odds) => {
                         if (index == -1) return;
-                        // console.log(gameData.site)
                         gameData.site[index].siteGameID = siteDataList.gameID;
                         odds.prices.forEach((prices) => {
+                            var priceString = JSON.stringify(prices)
+                            var gameDataString = JSON.stringify(gameData)
+                            var goGameData = ''
                             if (odds.playMode == spreadTypeHA) {
-                                var priceString = JSON.stringify(prices)
-                                var gameDataString = JSON.stringify(gameData)
-                                gameData = this.$go.ProccessHA(index, prices, gameData, priceString, gameDataString)
+                                goGameData = this.$go.ProccessHA(index, priceString, gameDataString, this.GameType)
+                                if (goGameData != null) {
+                                    gameData = JSON.parse(goGameData)
+                                }
                                 // gameData = this.proccessHA(index, prices, gameData);
                             } else if (odds.playMode == spreadTypeOU) {
-                                gameData = this.$go.ProccessOU(index, prices, gameData)
+                                goGameData = this.$go.ProccessOU(index, priceString, gameDataString, this.GameType)
+                                if (goGameData != null) {
+                                    gameData = JSON.parse(goGameData)
+                                }
                                 // gameData = this.proccessOU(index, prices, gameData);
                             }
                         });
@@ -167,18 +173,18 @@ const ApiGameData = {
         //     }
         //     return gameData;
         // },
-        // saveOdds(odd, gameData, index, oddsIndex) {
-        //     let oddData = "-";
-        //     if (odd.odd != -1) {
-        //         oddData = odd.odd;
-        //     }
-        //     if (odd.oddType == "O" || odd.oddType == "H") {
-        //         gameData.site[index].odds[oddsIndex].odd1 = oddData;
-        //     } else if (odd.oddType == "U" || odd.oddType == "A") {
-        //         gameData.site[index].odds[oddsIndex].odd2 = oddData;
-        //     }
-        //     return gameData;
-        // },
+        saveOdds(odd, gameData, index, oddsIndex) {
+            let oddData = "-";
+            if (odd.odd != -1) {
+                oddData = odd.odd;
+            }
+            if (odd.oddType == "O" || odd.oddType == "H") {
+                gameData.site[index].odds[oddsIndex].odd1 = oddData;
+            } else if (odd.oddType == "U" || odd.oddType == "A") {
+                gameData.site[index].odds[oddsIndex].odd2 = oddData;
+            }
+            return gameData;
+        },
         async LanguageMapping(form, date = null) {
             if (date == null) date = DateTime.diff_f(0).replace(/-/gi, "")
             let localMapping = localStorage.getItem(`lang${form}Mapping`)
